@@ -8,13 +8,18 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Toast 测试 ，可以切换 Flavor 以使用不同的 targetSdkVersion
+ */
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     fun normalToast(view: View) {
         showToastDelay {
             Toast.makeText(this, R.string.text_toast, Toast.LENGTH_SHORT).also {
+                // 对于 text toast 以下两项无效
                 it.setGravity(Gravity.CENTER, 0, 0)
                 it.setMargin(0.1f, 0.06f)
-                
+
+                // 添加 Toast 显示/隐藏回调
                 it.addCallback(object : Toast.Callback() {
                     override fun onToastShown() {
                         super.onToastShown()
@@ -34,6 +39,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun constructorToast() {
+        // targetSdkVersion R 时正常，小于 R 崩溃
         Toast(this).also {
             it.setText(R.string.text_toast2)
             it.setGravity(Gravity.CENTER, 0, 0)
@@ -41,7 +47,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }.show()
     }
 
+    /**
+     * 自定义 Toast
+     */
     fun customToast(view: View) {
+        // 延迟 2 秒显示，targetSDKVersion 为 R 或更高时 应用在后台 Toast 不显示
         showToastDelay {
             val customToast = Toast(this)
             customToast.view = LayoutInflater.from(this).inflate(R.layout.view_toast, null)
